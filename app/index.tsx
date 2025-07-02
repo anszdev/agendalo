@@ -1,6 +1,6 @@
 import { Fontisto } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Pressable, Text, View } from "react-native";
+import { FlatList, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Index() {
@@ -10,7 +10,6 @@ export default function Index() {
       style={{
         paddingTop: insets.top + 16,
         paddingBottom: insets.bottom,
-        paddingHorizontal: 16,
       }}
     >
       <View
@@ -18,6 +17,7 @@ export default function Index() {
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
+          paddingHorizontal: 16,
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
@@ -32,18 +32,234 @@ export default function Index() {
         </Pressable>
       </View>
 
-      <View>
-        <View>
+      <View style={{ marginTop: 16, paddingHorizontal: 16 }}>
+        <View style={{ flexDirection: "row", justifyContent: "center" }}>
           <Text style={{ fontSize: 24, fontWeight: "bold" }}>Julio, 2025</Text>
         </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 8,
+            paddingHorizontal: 12,
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Lu</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Ma</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Mi</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Ju</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Vi</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Sa</Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Do</Text>
+        </View>
+        <FlatList
+          data={[
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+            20,
+          ]}
+          renderItem={({ item }) => (
+            <View>
+              <Text>{item}</Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ gap: 16 }}
+          scrollEventThrottle={16}
+          snapToInterval={16}
+          snapToAlignment="center"
+          decelerationRate="fast"
+        />
+      </View>
+      <View
+        style={{
+          marginTop: 36,
+          borderWidth: 1,
+          borderColor: "#ccc",
+          borderTopLeftRadius: 32,
+          borderTopRightRadius: 32,
+          height: 800,
+          paddingHorizontal: 16,
+          paddingVertical: 24,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ fontSize: 24 }}>Martes 2</Text>
+          <Text style={{ fontSize: 16 }}>3 citas</Text>
+        </View>
         <View>
-          <Text>Lu</Text>
-          <Text>Ma</Text>
-          <Text>Mi</Text>
-          <Text>Ju</Text>
-          <Text>Vi</Text>
-          <Text>Sa</Text>
-          <Text>Do</Text>
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <View style={{ width: "auto" }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>11:00</Text>
+              <Text style={{ fontSize: 14, alignSelf: "flex-end" }}>AM</Text>
+            </View>
+            <View
+              style={{
+                borderTopWidth: 1,
+                flex: 1,
+                marginTop: 6,
+                borderColor: "#ccc",
+                paddingTop: 16,
+                paddingBottom: 24,
+                gap: 12,
+              }}
+            >
+              <View
+                style={{
+                  padding: 6,
+                  borderRadius: 9999,
+                  backgroundColor: "#FADADD",
+                  flexDirection: "row",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("@assets/images/avatar.jpg")}
+                  style={{ width: 70, height: 70, borderRadius: 9999 }}
+                />
+                <View>
+                  <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                    Tulio Treviño
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 4,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Fontisto name="clock" size={16} color="black" />
+                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                      11:00
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{
+                  padding: 6,
+                  borderRadius: 9999,
+                  backgroundColor: "#A8DADC",
+                  flexDirection: "row",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("@assets/images/avatar.jpg")}
+                  style={{ width: 70, height: 70, borderRadius: 9999 }}
+                />
+                <View>
+                  <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                    Juan Carlos B
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 4,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Fontisto name="clock" size={16} color="black" />
+                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                      11:15
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <View style={{ width: "auto" }}>
+              <Text style={{ fontSize: 18, fontWeight: "bold" }}>03:00</Text>
+              <Text style={{ fontSize: 14, alignSelf: "flex-end" }}>PM</Text>
+            </View>
+            <View
+              style={{
+                borderTopWidth: 1,
+                flex: 1,
+                marginTop: 6,
+                borderColor: "#ccc",
+                paddingTop: 16,
+                paddingBottom: 24,
+                gap: 12,
+              }}
+            >
+              <View
+                style={{
+                  padding: 6,
+                  borderRadius: 9999,
+                  backgroundColor: "#FBCEB1",
+                  flexDirection: "row",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("@assets/images/avatar.jpg")}
+                  style={{ width: 70, height: 70, borderRadius: 9999 }}
+                />
+                <View>
+                  <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                    Juanin
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 4,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Fontisto name="clock" size={16} color="black" />
+                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                      03:00
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View
+                style={{
+                  padding: 6,
+                  borderRadius: 9999,
+                  backgroundColor: "#FFFFCC",
+                  flexDirection: "row",
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <Image
+                  source={require("@assets/images/avatar.jpg")}
+                  style={{ width: 70, height: 70, borderRadius: 9999 }}
+                />
+                <View>
+                  <Text style={{ fontSize: 24, fontWeight: "bold" }}>
+                    Don Pool
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 4,
+                      alignItems: "center",
+                    }}
+                  >
+                    <Fontisto name="clock" size={16} color="black" />
+                    <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                      03:45
+                    </Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
         </View>
       </View>
     </View>
