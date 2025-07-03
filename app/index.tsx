@@ -1,7 +1,9 @@
 import { Fontisto } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { FlatList, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { Calendar } from "@/components/calendar/Calendar";
 
 export default function Index() {
   const insets = useSafeAreaInsets();
@@ -25,53 +27,15 @@ export default function Index() {
             source={require("@assets/images/avatar.jpg")}
             style={{ width: 50, height: 50, borderRadius: 50 }}
           />
-          <Text style={{ fontSize: 22, fontWeight: "bold" }}>Hola, Ariana</Text>
+          <Text style={{ fontSize: 22, fontWeight: "bold" }}>Hola, Ari</Text>
         </View>
         <Pressable>
           <Fontisto name="bell" size={24} color="black" />
         </Pressable>
       </View>
 
-      <View style={{ marginTop: 16, paddingHorizontal: 16 }}>
-        <View style={{ flexDirection: "row", justifyContent: "center" }}>
-          <Text style={{ fontSize: 24, fontWeight: "bold" }}>Julio, 2025</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 8,
-            paddingHorizontal: 12,
-          }}
-        >
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Lu</Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Ma</Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Mi</Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Ju</Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Vi</Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Sa</Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Do</Text>
-        </View>
-        <FlatList
-          data={[
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-            20,
-          ]}
-          renderItem={({ item }) => (
-            <View>
-              <Text>{item}</Text>
-            </View>
-          )}
-          keyExtractor={(item) => item.toString()}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ gap: 16 }}
-          scrollEventThrottle={16}
-          snapToInterval={16}
-          snapToAlignment="center"
-          decelerationRate="fast"
-        />
-      </View>
+      <Calendar />
+
       <View
         style={{
           marginTop: 36,
