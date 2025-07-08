@@ -1,42 +1,48 @@
 import { format, monthDays } from "@formkit/tempo";
+import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import { MonthSelector } from "./MonthSelector";
+
+const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
 export function Calendar() {
-  const currentMonthAndYear = format(new Date(), "MMMM, YYYY", "es");
-  const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
-
-  //Saber cuantos dias tiene el mes
-  const firstDay = new Date(2025, 6, 1).getDay();
-  const firstWeekDay = (firstDay + 6) % 7;
-
-  const dayInMonth = monthDays("2025-07");
-  const daysInPreviousMonth = monthDays("2025-06");
-
-  const previousMonthDays = Array.from(
-    { length: firstWeekDay },
-    (_, i) => daysInPreviousMonth - firstWeekDay + i + 1
+  const [date, setDate] = useState(new Date());
+  const [daySelected, setDaySelected] = useState<number | null>(
+    new Date().getDate()
   );
 
-  const week = Array.from({ length: dayInMonth }, (_, i) => i + 1);
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  const firstWeekDay = (firstDay + 6) % 7;
+
+  const dayInMonth = monthDays(format(date, "YYYY-MM", "es"));
+  const daysInPreviousMonth = monthDays(format(date, "YYYY-MM", "es"));
+
+  const previousMonthDays = Array.from({ length: firstWeekDay }, (_, i) => ({
+    day: daysInPreviousMonth - firstWeekDay + i + 1,
+    month: date.getMonth() - 1,
+  }));
+
+  const week = Array.from({ length: dayInMonth }, (_, i) => ({
+    day: i + 1,
+    month: date.getMonth(),
+  }));
 
   const totalNeed = 35;
   const daysSoFar = previousMonthDays.length + week.length;
   const nextMonthDays = Array.from(
     { length: totalNeed - daysSoFar },
-    (_, i) => i + 1
+    (_, i) => ({ day: i + 1, month: date.getMonth() + 1 })
   );
 
   const weekDays = [...previousMonthDays, ...week, ...nextMonthDays];
 
-  const currentDay = Number(format(new Date(), "D"));
+  const selectedDay = (day: number) => {
+    setDaySelected(day);
+  };
 
   return (
     <View style={{ marginTop: 16, paddingHorizontal: 16 }}>
-      <View style={{ flexDirection: "row", justifyContent: "center" }}>
-        <Text style={{ fontSize: 24, fontWeight: "bold" }}>
-          {currentMonthAndYear}
-        </Text>
-      </View>
+      <MonthSelector date={date} onChangeDate={setDate} />
       <View
         style={{
           flexDirection: "row",
@@ -67,7 +73,7 @@ export function Calendar() {
           rowGap: 6,
         }}
       >
-        {weekDays.map((day, index) => (
+        {weekDays.map(({ day, month }, index) => (
           <View
             key={index}
             style={{
@@ -83,8 +89,17 @@ export function Calendar() {
                 borderRadius: 9999,
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: day === currentDay ? "#FADADD" : "transparent",
+                backgroundColor:
+                  day === daySelected &&
+                  index >= firstWeekDay &&
+                  index < firstWeekDay + dayInMonth
+                    ? "#FADADD"
+                    : "transparent",
+                borderWidth:
+                  day === date.getDate() && month === date.getMonth() ? 2 : 0,
+                borderColor: "#A8DADC",
               }}
+              onPress={() => selectedDay(day)}
             >
               <Text
                 style={{
