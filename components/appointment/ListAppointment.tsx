@@ -5,12 +5,11 @@ export const ListAppointment = () => {
   return (
     <View
       style={{
-        marginTop: 36,
+        marginTop: 16,
         borderWidth: 1,
         borderColor: "#ccc",
         borderTopLeftRadius: 32,
         borderTopRightRadius: 32,
-        height: 800,
         paddingHorizontal: 16,
         paddingVertical: 24,
       }}
