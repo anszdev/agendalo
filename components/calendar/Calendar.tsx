@@ -1,6 +1,15 @@
 import { format, monthDays } from "@formkit/tempo";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { MonthSelector } from "./MonthSelector";
 
 const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
@@ -40,9 +49,22 @@ export function Calendar() {
     setDaySelected(day);
   };
 
+  const translateY = useSharedValue(40);
+
+  const gesture = Gesture.Pan().onUpdate((event) => {
+    translateY.value = event.translationY;
+  });
+
+  const translateYAnimated = useAnimatedStyle(() => {
+    return {
+      height: translateY.value,
+    };
+  });
+
   return (
     <View style={{ marginTop: 16, paddingHorizontal: 16 }}>
       <MonthSelector date={date} onChangeDate={setDate} />
+      {/* Days week */}
       <View
         style={{
           flexDirection: "row",
@@ -65,58 +87,86 @@ export function Calendar() {
           </Text>
         ))}
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          flexWrap: "wrap",
-          rowGap: 6,
-        }}
-      >
-        {weekDays.map(({ day, month }, index) => (
-          <View
-            key={index}
-            style={{
-              width: `${100 / 7}%`,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+
+      {/* Days month */}
+      <GestureHandlerRootView style={{ height: "auto" }}>
+        <GestureDetector gesture={gesture}>
+          <Animated.View
+            style={[
+              {
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                flexWrap: "wrap",
+                rowGap: 6,
+                overflow: "hidden",
+                position: "relative",
+              },
+              translateYAnimated,
+            ]}
           >
-            <Pressable
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: 9999,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor:
-                  day === daySelected &&
-                  index >= firstWeekDay &&
-                  index < firstWeekDay + dayInMonth
-                    ? "#FADADD"
-                    : "transparent",
-                borderWidth:
-                  day === date.getDate() && month === date.getMonth() ? 2 : 0,
-                borderColor: "#A8DADC",
-              }}
-              onPress={() => selectedDay(day)}
-            >
-              <Text
+            {weekDays.map(({ day, month }, index) => (
+              <View
+                key={index}
                 style={{
-                  fontSize: 18,
-                  textAlign: "center",
-                  color:
-                    index < firstWeekDay || index >= firstWeekDay + dayInMonth
-                      ? "#ccc"
-                      : "black",
+                  width: `${100 / 7}%`,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                {day}
-              </Text>
-            </Pressable>
-          </View>
-        ))}
-      </View>
+                <Pressable
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 9999,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor:
+                      day === daySelected &&
+                      index >= firstWeekDay &&
+                      index < firstWeekDay + dayInMonth
+                        ? "#FADADD"
+                        : "transparent",
+                    borderWidth:
+                      day === date.getDate() && month === date.getMonth()
+                        ? 2
+                        : 0,
+                    borderColor: "#A8DADC",
+                  }}
+                  onPress={() => selectedDay(day)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      textAlign: "center",
+                      color:
+                        index < firstWeekDay ||
+                        index >= firstWeekDay + dayInMonth
+                          ? "#ccc"
+                          : "black",
+                    }}
+                  >
+                    {day}
+                  </Text>
+                </Pressable>
+              </View>
+            ))}
+            <View
+              style={{
+                height: 6,
+                width: 40,
+                borderRadius: 9999,
+                marginHorizontal: "auto",
+                backgroundColor: "#A8DADC",
+                marginTop: 8,
+                position: "absolute",
+                bottom: 0,
+                left: "50%",
+                transform: [{ translateX: -20 }],
+              }}
+            />
+          </Animated.View>
+        </GestureDetector>
+      </GestureHandlerRootView>
     </View>
   );
 }
