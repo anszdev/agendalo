@@ -6,6 +6,7 @@ export const useCalendar = () => {
   const [daySelected, setDaySelected] = useState<number | null>(
     new Date().getDate()
   );
+  const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
   const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
   const firstWeekDay = (firstDay + 6) % 7;
@@ -45,5 +46,6 @@ export const useCalendar = () => {
     selectedDay,
     firstWeekDay,
     dayInMonth,
+    days,
   };
 };
