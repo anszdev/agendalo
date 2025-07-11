@@ -1,5 +1,4 @@
-import { format, monthDays } from "@formkit/tempo";
-import { useState } from "react";
+import { useCalendar } from "@/hooks/calendar/useCalendar";
 import { Pressable, Text, View } from "react-native";
 import {
   Gesture,
@@ -14,40 +13,16 @@ import { MonthSelector } from "./MonthSelector";
 
 const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
-export function Calendar() {
-  const [date, setDate] = useState(new Date());
-  const [daySelected, setDaySelected] = useState<number | null>(
-    new Date().getDate()
-  );
-
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  const firstWeekDay = (firstDay + 6) % 7;
-
-  const dayInMonth = monthDays(format(date, "YYYY-MM", "es"));
-  const daysInPreviousMonth = monthDays(format(date, "YYYY-MM", "es"));
-
-  const previousMonthDays = Array.from({ length: firstWeekDay }, (_, i) => ({
-    day: daysInPreviousMonth - firstWeekDay + i + 1,
-    month: date.getMonth() - 1,
-  }));
-
-  const week = Array.from({ length: dayInMonth }, (_, i) => ({
-    day: i + 1,
-    month: date.getMonth(),
-  }));
-
-  const totalNeed = 35;
-  const daysSoFar = previousMonthDays.length + week.length;
-  const nextMonthDays = Array.from(
-    { length: totalNeed - daysSoFar },
-    (_, i) => ({ day: i + 1, month: date.getMonth() + 1 })
-  );
-
-  const weekDays = [...previousMonthDays, ...week, ...nextMonthDays];
-
-  const selectedDay = (day: number) => {
-    setDaySelected(day);
-  };
+export const Calendar = () => {
+  const {
+    date,
+    daySelected,
+    selectedDay,
+    setDate,
+    weekDays,
+    dayInMonth,
+    firstWeekDay,
+  } = useCalendar();
 
   const translateY = useSharedValue(40);
 
@@ -169,4 +144,4 @@ export function Calendar() {
       </GestureHandlerRootView>
     </View>
   );
-}
+};
