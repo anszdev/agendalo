@@ -8,10 +8,9 @@ import {
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
 import { MonthSelector } from "./MonthSelector";
-
-const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
 export const Calendar = () => {
   const {
@@ -22,17 +21,37 @@ export const Calendar = () => {
     weekDays,
     dayInMonth,
     firstWeekDay,
+    days,
   } = useCalendar();
 
-  const translateY = useSharedValue(40);
+  const MAX_HEIGHT = 280;
+  const MIN_HEIGHT = 46;
 
-  const gesture = Gesture.Pan().onUpdate((event) => {
-    translateY.value = event.translationY;
-  });
+  const calendarHeight = useSharedValue(MIN_HEIGHT);
+  const starCalendarHeight = useSharedValue(MIN_HEIGHT);
+
+  const gesture = Gesture.Pan()
+    .onBegin(() => {
+      starCalendarHeight.value = calendarHeight.value;
+    })
+    .onUpdate((event) => {
+      const nextHeight = starCalendarHeight.value + event.translationY;
+
+      if (nextHeight >= MIN_HEIGHT && nextHeight <= MAX_HEIGHT) {
+        calendarHeight.value = nextHeight;
+      }
+    })
+    .onEnd((event) => {
+      if (event.translationY > 20) {
+        calendarHeight.value = withSpring(MAX_HEIGHT);
+      } else {
+        calendarHeight.value = withSpring(MIN_HEIGHT);
+      }
+    });
 
   const translateYAnimated = useAnimatedStyle(() => {
     return {
-      height: translateY.value,
+      height: calendarHeight.value,
     };
   });
 
