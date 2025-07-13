@@ -1,7 +1,15 @@
+import { FONTS } from "@/constants/fonts";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
 export default function RootLayout() {
+  const [loaded] = useFonts(FONTS);
+
+  if (!loaded) {
+    return null;
+  }
+
   return (
     <>
       <Stack>
@@ -12,7 +20,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
-      <StatusBar style="dark" />
+      <StatusBar style="dark" translucent backgroundColor="transparent" />
     </>
   );
 }
