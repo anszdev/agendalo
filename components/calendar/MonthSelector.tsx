@@ -1,4 +1,5 @@
-import { Fontisto } from "@expo/vector-icons";
+import { FONT_WEIGHT } from "@/constants/fonts";
+import Feather from "@expo/vector-icons/Feather";
 import { format } from "@formkit/tempo";
 import { Pressable, Text, View } from "react-native";
 
@@ -29,7 +30,7 @@ export const MonthSelector = ({ date, onChangeDate }: MonthSelectorProps) => {
         alignItems: "center",
         gap: 8,
         justifyContent: "space-between",
-        paddingHorizontal: 16,
+        paddingHorizontal: 8,
       }}
     >
       <Pressable
@@ -41,12 +42,12 @@ export const MonthSelector = ({ date, onChangeDate }: MonthSelectorProps) => {
           justifyContent: "center",
         }}
       >
-        <Fontisto name="arrow-left" />
+        <Feather name="chevron-left" size={24} color="black" />
       </Pressable>
       <Text
         style={{
           fontSize: 20,
-          fontWeight: "bold",
+          fontFamily: FONT_WEIGHT.bold,
           textTransform: "capitalize",
         }}
         onPress={resetMonth}
@@ -62,7 +63,7 @@ export const MonthSelector = ({ date, onChangeDate }: MonthSelectorProps) => {
           justifyContent: "center",
         }}
       >
-        <Fontisto name="arrow-right" />
+        <Feather name="chevron-right" size={24} color="black" />
       </Pressable>
     </View>
   );
