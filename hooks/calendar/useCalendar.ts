@@ -3,8 +3,8 @@ import { useState } from "react";
 
 export const useCalendar = () => {
   const [date, setDate] = useState(new Date());
-  const [daySelected, setDaySelected] = useState<number | null>(
-    new Date().getDate()
+  const [daySelected, setDaySelected] = useState<number | null | string>(
+    new Date().getDate(),
   );
   const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
@@ -15,7 +15,7 @@ export const useCalendar = () => {
   const daysInPreviousMonth = monthDays(format(date, "YYYY-MM", "es"));
 
   const previousMonthDays = Array.from({ length: firstWeekDay }, (_, i) => ({
-    day: daysInPreviousMonth - firstWeekDay + i + 1,
+    day: "",
     month: date.getMonth() - 1,
   }));
 
@@ -28,12 +28,13 @@ export const useCalendar = () => {
   const daysSoFar = previousMonthDays.length + week.length;
   const nextMonthDays = Array.from(
     { length: totalNeed - daysSoFar },
-    (_, i) => ({ day: i + 1, month: date.getMonth() + 1 })
+    (_, i) => ({ day: "", month: date.getMonth() + 1 }),
   );
 
   const weekDays = [...previousMonthDays, ...week, ...nextMonthDays];
 
-  const selectedDay = (day: number) => {
+  const selectedDay = (day: number | string) => {
+    if (day === "") return;
     setDaySelected(day);
   };
 
