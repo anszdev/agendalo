@@ -47,15 +47,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="clients"
-        options={{
-          title: "Clientes",
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="users" size={size} color={color} />
-          ),
-        }}
-      />
     </Tabs>
   );
 }
