@@ -1,9 +1,35 @@
 import { FONT_WEIGHT } from "@/constants/fonts";
-import { Fontisto } from "@expo/vector-icons";
+import { viewCalendarType } from "@/types/calendar";
+import Feather from "@expo/vector-icons/Feather";
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 
-export const Header = () => {
+interface HeaderProps {
+  viewCalendar: viewCalendarType;
+  toggleViewCalendar: (viewCalendar: viewCalendarType) => void;
+}
+
+export const Header = ({ viewCalendar, toggleViewCalendar }: HeaderProps) => {
+  const positionActive = useSharedValue(2);
+  const animateStyle = useAnimatedStyle(() => {
+    return {
+      left: positionActive.value,
+    };
+  });
+
+  const handleToggleViewCalendar = () => {
+    positionActive.value = withSpring(viewCalendar === "month" ? 4 : 36, {
+      damping: 20,
+      stiffness: 150,
+    });
+    toggleViewCalendar(viewCalendar === "week" ? "month" : "week");
+  };
+
   return (
     <View style={styles.header}>
       <View style={styles.header_user}>
@@ -13,8 +39,25 @@ export const Header = () => {
         />
         <Text style={styles.user_name}>Hola, Ari</Text>
       </View>
-      <Pressable style={styles.notify_button}>
-        <Fontisto name="bell" size={24} color="black" />
+      <Pressable
+        style={styles.view_calendar_toggle}
+        onPress={handleToggleViewCalendar}
+      >
+        <Animated.View
+          style={[styles.view_calendar_button_active, animateStyle]}
+        />
+        <Feather
+          name="list"
+          size={20}
+          color="black"
+          style={styles.view_calendar_button}
+        />
+        <Feather
+          name="grid"
+          size={20}
+          color="black"
+          style={styles.view_calendar_button}
+        />
       </Pressable>
     </View>
   );
@@ -30,7 +73,22 @@ const styles = StyleSheet.create({
   header_user: { flexDirection: "row", alignItems: "center", gap: 8 },
   user_image: { width: 50, height: 50, borderRadius: 50 },
   user_name: { fontSize: 22, fontFamily: FONT_WEIGHT.extrabold },
-  notify_button: {
+  view_calendar_toggle: {
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 9999,
+    position: "relative",
+    padding: 4,
+  },
+  view_calendar_button: {
+    padding: 6,
+  },
+  view_calendar_button_active: {
+    width: 33.5,
+    height: 33.5,
     backgroundColor: "#fff",
     shadowColor: "#000",
     shadowOffset: {
@@ -40,10 +98,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 6,
     elevation: 6,
-    width: 48,
-    height: 48,
-    justifyContent: "center",
-    alignItems: "center",
+    position: "absolute",
     borderRadius: 9999,
+    left: 2,
   },
 });
