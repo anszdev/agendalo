@@ -20,7 +20,7 @@ export default function RootLayout() {
           }}
         />
       </Stack>
-      <StatusBar style="dark" translucent backgroundColor="transparent" />
+      <StatusBar style="dark" translucent />
     </>
   );
 }
