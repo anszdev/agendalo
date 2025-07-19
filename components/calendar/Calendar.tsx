@@ -1,17 +1,24 @@
 import { FONT_WEIGHT } from "@/constants/fonts";
 import { useCalendar } from "@/hooks/calendar/useCalendar";
+import { viewCalendarType } from "@/types/calendar";
+import { useEffect } from "react";
 import { Dimensions, FlatList, Text, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withSpring,
 } from "react-native-reanimated";
 import { ButtonDay } from "./ButtonDay";
 import { MonthSelector } from "./MonthSelector";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-export const Calendar = () => {
+export const Calendar = ({
+  viewCalendar,
+}: {
+  viewCalendar: viewCalendarType;
+}) => {
   const { date, daySelected, selectedDay, setDate, weekDays, days } =
     useCalendar();
 
@@ -19,7 +26,14 @@ export const Calendar = () => {
   const MIN_HEIGHT = 46;
 
   const calendarHeight = useSharedValue(MIN_HEIGHT);
-  const starCalendarHeight = useSharedValue(MIN_HEIGHT);
+
+  useEffect(() => {
+    if (viewCalendar === "week") {
+      calendarHeight.value = withSpring(MIN_HEIGHT);
+    } else {
+      calendarHeight.value = withSpring(MAX_HEIGHT);
+    }
+  }, [viewCalendar]);
 
   /* const gesture = Gesture.Pan()
     .onBegin(() => {
@@ -42,7 +56,7 @@ export const Calendar = () => {
 
   const translateYAnimated = useAnimatedStyle(() => {
     return {
-      height: MAX_HEIGHT,
+      height: calendarHeight.value,
     };
   });
 
@@ -101,16 +115,16 @@ export const Calendar = () => {
           ]}
         >
           <FlatList
-            /* horizontal
+            horizontal={viewCalendar === "week"}
             pagingEnabled
-            showsHorizontalScrollIndicator={false} */
+            showsHorizontalScrollIndicator={false}
             data={weeks}
             keyExtractor={(_, index) => index.toString()}
-            renderItem={({ item: week, index: indexWeek }) => (
+            renderItem={({ item: week }) => (
               <View
                 style={{
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  justifyContent: "flex-start",
                   width: SCREEN_WIDTH - 32,
                 }}
               >
