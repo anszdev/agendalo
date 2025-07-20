@@ -1,40 +1,61 @@
+import {
+  dateAtom,
+  daySelectedAtom,
+  formattedDayTextAtom,
+} from "@/atoms/calendar";
+import { Day } from "@/types/calendar";
 import { format, monthDays } from "@formkit/tempo";
-import { useState } from "react";
+import { useAtom } from "jotai";
 
 export const useCalendar = () => {
-  const [date, setDate] = useState(new Date());
-  const [daySelected, setDaySelected] = useState<number | null | string>(
-    new Date().getDate(),
+  const [date, setDate] = useAtom(dateAtom);
+  const [daySelected, setDaySelected] = useAtom(daySelectedAtom);
+  const [formattedDayText] = useAtom(formattedDayTextAtom);
+
+  // Generate the calendar days for the current month
+  const firstDayOfMonth = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    1
+  ).getDay();
+  const calculatedFirstWeekDay = (firstDayOfMonth + 6) % 7;
+
+  const totalDaysInMonth = monthDays(format(date, "YYYY-MM", "es"));
+
+  const prevMonthEmptyDays = Array.from(
+    { length: calculatedFirstWeekDay },
+    (_, i) => ({
+      day: null,
+      month: date.getMonth() - 1,
+      year: date.getFullYear(),
+    })
   );
-  const days = ["Lu", "Ma", "Mi", "Ju", "Vi", "Sa", "Do"];
 
-  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
-  const firstWeekDay = (firstDay + 6) % 7;
-
-  const dayInMonth = monthDays(format(date, "YYYY-MM", "es"));
-  const daysInPreviousMonth = monthDays(format(date, "YYYY-MM", "es"));
-
-  const previousMonthDays = Array.from({ length: firstWeekDay }, (_, i) => ({
-    day: "",
-    month: date.getMonth() - 1,
-  }));
-
-  const week = Array.from({ length: dayInMonth }, (_, i) => ({
+  const calendarDays = Array.from({ length: totalDaysInMonth }, (_, i) => ({
     day: i + 1,
     month: date.getMonth(),
+    year: date.getFullYear(),
   }));
 
-  const totalNeed = 35;
-  const daysSoFar = previousMonthDays.length + week.length;
-  const nextMonthDays = Array.from(
-    { length: totalNeed - daysSoFar },
-    (_, i) => ({ day: "", month: date.getMonth() + 1 }),
+  const requiredTotal = 35;
+  const daysCounted = prevMonthEmptyDays.length + calendarDays.length;
+  const nextMonthPlaceholderDays = Array.from(
+    { length: requiredTotal - daysCounted },
+    (_, i) => ({
+      day: null,
+      month: date.getMonth() + 1,
+      year: date.getFullYear(),
+    })
   );
 
-  const weekDays = [...previousMonthDays, ...week, ...nextMonthDays];
+  const calendarWeekDays = [
+    ...prevMonthEmptyDays,
+    ...calendarDays,
+    ...nextMonthPlaceholderDays,
+  ];
 
-  const selectedDay = (day: number | string) => {
-    if (day === "") return;
+  const selectedDay = (day: Day | null) => {
+    if (!day?.day) return;
     setDaySelected(day);
   };
 
@@ -43,10 +64,10 @@ export const useCalendar = () => {
     setDate,
     daySelected,
     setDaySelected,
-    weekDays,
+    calendarWeekDays,
     selectedDay,
-    firstWeekDay,
-    dayInMonth,
-    days,
+    calculatedFirstWeekDay,
+    totalDaysInMonth,
+    formattedDayText,
   };
 };
