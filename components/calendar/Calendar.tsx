@@ -1,6 +1,6 @@
 import { useCalendar } from "@/hooks/calendar/useCalendar";
-import { viewCalendarType, Weeks } from "@/types/calendar";
-import { useEffect } from "react";
+import { Day, viewCalendarType, Weeks } from "@/types/calendar";
+import { useEffect, useRef } from "react";
 import { Dimensions, FlatList, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -18,12 +18,20 @@ export const Calendar = ({
 }: {
   viewCalendar: viewCalendarType;
 }) => {
-  const { date, daySelected, selectedDay, setDate, weekDays } = useCalendar();
+  const calendarRef = useRef<FlatList>(null);
 
-  const MAX_HEIGHT = weekDays.length > 35 ? 270 : 230;
+  const { date, daySelected, selectedDay, setDate, calendarWeekDays } =
+    useCalendar();
+
+  const MAX_HEIGHT = calendarWeekDays.length > 35 ? 270 : 230;
   const MIN_HEIGHT = 54;
 
   const calendarHeight = useSharedValue(MIN_HEIGHT);
+  const translateYAnimated = useAnimatedStyle(() => {
+    return {
+      height: calendarHeight.value,
+    };
+  });
 
   useEffect(() => {
     if (viewCalendar === "week") {
@@ -33,16 +41,32 @@ export const Calendar = ({
     }
   }, [viewCalendar, MAX_HEIGHT, calendarHeight]);
 
-  const translateYAnimated = useAnimatedStyle(() => {
-    return {
-      height: calendarHeight.value,
-    };
-  });
+  useEffect(() => {
+    if (viewCalendar === "week") {
+      calendarRef.current?.scrollToIndex({
+        index: 4,
+      });
+    } else {
+      calendarRef.current?.scrollToOffset({
+        offset: 0,
+        animated: true,
+      });
+    }
+  }, [viewCalendar]);
 
   const weeks: Weeks = [];
-  for (let i = 0; i < weekDays.length; i += 7) {
-    weeks.push(weekDays.slice(i, i + 7));
+  for (let i = 0; i < calendarWeekDays.length; i += 7) {
+    weeks.push(calendarWeekDays.slice(i, i + 7));
   }
+
+  const selectedWeekIndex = weeks.findIndex((week) =>
+    week.some(
+      (day) =>
+        day.day === daySelected?.day &&
+        day.month === daySelected?.month &&
+        day.year === daySelected?.year
+    )
+  );
 
   return (
     <View style={{ marginTop: 16, paddingHorizontal: 16, paddingBottom: 12 }}>
@@ -57,7 +81,6 @@ export const Calendar = ({
             flexDirection: "row",
             justifyContent: "flex-start",
             flexWrap: "wrap",
-            rowGap: 6,
             overflow: "hidden",
             position: "relative",
           },
@@ -66,7 +89,10 @@ export const Calendar = ({
       >
         <FlatList
           horizontal={viewCalendar === "week"}
+          decelerationRate={"fast"}
           pagingEnabled
+          ref={calendarRef}
+          initialNumToRender={3}
           showsHorizontalScrollIndicator={false}
           data={weeks}
           style={{ paddingTop: 4, paddingBottom: 8 }}
@@ -79,16 +105,22 @@ export const Calendar = ({
                 width: SCREEN_WIDTH - 32,
               }}
             >
-              {week.map((day, dayIndex) => (
+              {week.map((day: Day, dayIndex: number) => (
                 <ButtonDay
                   key={`${day}-${day.month}-${dayIndex}`}
                   day={day}
                   selected={daySelected}
                   updateSelectedDay={selectedDay}
+                  activeIndicator={dayIndex % 2 === 0}
                 />
               ))}
             </View>
           )}
+          getItemLayout={(data, index) => ({
+            length: SCREEN_WIDTH - 32,
+            offset: (SCREEN_WIDTH - 32) * index,
+            index,
+          })}
         />
       </Animated.View>
     </View>
