@@ -1,14 +1,11 @@
 import { ListAppointment } from "@/components/appointment/ListAppointment";
 import { Calendar } from "@/components/calendar/Calendar";
 import { Header } from "@/components/ui/Header";
-import { type viewCalendarType } from "@/types/calendar";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Index() {
-  const [viewCalendar, setViewCalendar] = useState<viewCalendarType>("week");
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <LinearGradient
@@ -35,11 +32,8 @@ export default function Index() {
             paddingVertical: 16,
           }}
         >
-          <Header
-            viewCalendar={viewCalendar}
-            toggleViewCalendar={setViewCalendar}
-          />
-          <Calendar viewCalendar={viewCalendar} />
+          <Header />
+          <Calendar />
         </LinearGradient>
 
         <ListAppointment />
