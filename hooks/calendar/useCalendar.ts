@@ -3,7 +3,7 @@ import {
   daySelectedAtom,
   formattedDayTextAtom,
 } from "@/atoms/calendar";
-import { Day } from "@/types/calendar";
+import { Day, Weeks } from "@/types/calendar";
 import { format, monthDays } from "@formkit/tempo";
 import { useAtom } from "jotai";
 
@@ -54,6 +54,11 @@ export const useCalendar = () => {
     ...nextMonthPlaceholderDays,
   ];
 
+  const weeks: Weeks = [];
+  for (let i = 0; i < calendarWeekDays.length; i += 7) {
+    weeks.push(calendarWeekDays.slice(i, i + 7));
+  }
+
   const selectedDay = (day: Day | null) => {
     if (!day?.day) return;
     setDaySelected(day);
@@ -69,5 +74,6 @@ export const useCalendar = () => {
     calculatedFirstWeekDay,
     totalDaysInMonth,
     formattedDayText,
+    weeks,
   };
 };
