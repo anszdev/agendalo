@@ -1,4 +1,4 @@
-export type viewCalendarType = "week" | "month";
+export type viewCalendarType = "hidden" | "month";
 export type Day = {
   day: number | null;
   month: number;

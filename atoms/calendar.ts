@@ -1,4 +1,4 @@
-import { Day } from "@/types/calendar";
+import { Day, viewCalendarType } from "@/types/calendar";
 import { format } from "@formkit/tempo";
 import { atom } from "jotai";
 
@@ -13,3 +13,5 @@ export const formattedDayTextAtom = atom((get) => {
   const { day, month, year } = get(daySelectedAtom);
   return format(new Date(year, month, day ?? 1), "dddd D", "es");
 });
+
+export const viewCalendarAtom = atom<viewCalendarType>("hidden");

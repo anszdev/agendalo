@@ -1,7 +1,8 @@
+import { viewCalendarAtom } from "@/atoms/calendar";
 import { FONT_WEIGHT } from "@/constants/fonts";
-import { viewCalendarType } from "@/types/calendar";
 import Feather from "@expo/vector-icons/Feather";
 import { Image } from "expo-image";
+import { useAtom } from "jotai";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -9,12 +10,9 @@ import Animated, {
   withSpring,
 } from "react-native-reanimated";
 
-interface HeaderProps {
-  viewCalendar: viewCalendarType;
-  toggleViewCalendar: (viewCalendar: viewCalendarType) => void;
-}
+export const Header = () => {
+  const [viewCalendar, setViewCalendar] = useAtom(viewCalendarAtom);
 
-export const Header = ({ viewCalendar, toggleViewCalendar }: HeaderProps) => {
   const positionActive = useSharedValue(2);
   const animateStyle = useAnimatedStyle(() => {
     return {
@@ -27,7 +25,7 @@ export const Header = ({ viewCalendar, toggleViewCalendar }: HeaderProps) => {
       damping: 20,
       stiffness: 150,
     });
-    toggleViewCalendar(viewCalendar === "week" ? "month" : "week");
+    setViewCalendar(viewCalendar === "hidden" ? "month" : "hidden");
   };
 
   return (

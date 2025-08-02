@@ -1,14 +1,44 @@
+import { viewCalendarAtom } from "@/atoms/calendar";
 import { FONT_WEIGHT } from "@/constants/fonts";
 import { useCalendar } from "@/hooks/calendar/useCalendar";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from "react-native-reanimated";
 import { Appointment } from "./Appointment";
 import { AppointmentHours } from "./AppointmentHours";
 
 export const ListAppointment = () => {
-  const { formattedDayText } = useCalendar();
+  const { formattedDayText, calendarWeekDays } = useCalendar();
+  const [viewCalendar] = useAtom(viewCalendarAtom);
+
+  const translateY = useSharedValue(0);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: translateY.value }],
+    };
+  });
+
+  useEffect(() => {
+    if (viewCalendar === "hidden") {
+      translateY.value = withSpring(-300, {
+        damping: 16,
+        stiffness: 120,
+      }); // Adjust this value as needed
+    } else {
+      translateY.value = withSpring(0, {
+        damping: 16,
+        stiffness: 120,
+      });
+    }
+  }, [viewCalendar, calendarWeekDays]);
 
   return (
-    <View style={st.list_appointment}>
+    <Animated.View style={[st.list_appointment, animatedStyle]}>
       <View style={st.list_appointment_header}>
         <Text style={st.list_appointment_day}>{formattedDayText}</Text>
         <Text style={st.list_appointment_count}>3 citas</Text>
@@ -26,7 +56,7 @@ export const ListAppointment = () => {
           contentContainerStyle={{ paddingBottom: 16 }}
         />
       </View>
-    </View>
+    </Animated.View>
   );
 };
 
