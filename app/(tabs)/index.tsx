@@ -14,7 +14,7 @@ export default function Index() {
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={{
-          height: 250,
+          height: 400,
           position: "absolute",
           top: 0,
           left: 0,
