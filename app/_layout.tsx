@@ -19,6 +19,14 @@ export default function RootLayout() {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="appointment"
+          options={{
+            presentation: "transparentModal",
+            animation: "fade_from_bottom",
+            headerShown: false,
+          }}
+        />
       </Stack>
       <StatusBar style="dark" translucent />
     </>

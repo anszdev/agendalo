@@ -2,6 +2,7 @@ import { viewCalendarAtom } from "@/atoms/calendar";
 import { FONT_WEIGHT } from "@/constants/fonts";
 import Feather from "@expo/vector-icons/Feather";
 import { Image } from "expo-image";
+import { router } from "expo-router";
 import { useAtom } from "jotai";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -37,26 +38,35 @@ export const Header = () => {
         />
         <Text style={styles.user_name}>Hola, Ari</Text>
       </View>
-      <Pressable
-        style={styles.view_calendar_toggle}
-        onPress={handleToggleViewCalendar}
-      >
-        <Animated.View
-          style={[styles.view_calendar_button_active, animateStyle]}
-        />
-        <Feather
-          name="list"
-          size={20}
-          color="black"
-          style={styles.view_calendar_button}
-        />
-        <Feather
-          name="grid"
-          size={20}
-          color="black"
-          style={styles.view_calendar_button}
-        />
-      </Pressable>
+      <View style={styles.header_buttons}>
+        <Pressable
+          style={styles.button_add_appointment}
+          onPress={() => router.push("/appointment")}
+        >
+          <Feather name="plus" size={24} color="black" />
+        </Pressable>
+
+        <Pressable
+          style={styles.view_calendar_toggle}
+          onPress={handleToggleViewCalendar}
+        >
+          <Animated.View
+            style={[styles.view_calendar_button_active, animateStyle]}
+          />
+          <Feather
+            name="list"
+            size={20}
+            color="black"
+            style={styles.view_calendar_button}
+          />
+          <Feather
+            name="grid"
+            size={20}
+            color="black"
+            style={styles.view_calendar_button}
+          />
+        </Pressable>
+      </View>
     </View>
   );
 };
@@ -99,5 +109,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     borderRadius: 9999,
     left: 2,
+  },
+  header_buttons: {
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
+  },
+  button_add_appointment: {
+    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    borderRadius: 9999,
+    padding: 4,
+    height: 40,
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
