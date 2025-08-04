@@ -10,26 +10,6 @@ const TabBarButton = (props: any) => {
   );
 };
 
-const AddAppointmentButton = (props: any) => {
-  return (
-    <Pressable
-      {...props}
-      android_ripple={null}
-      style={{
-        backgroundColor: "red",
-        width: 64,
-        height: 64,
-        borderRadius: 32,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: -6,
-      }}
-    >
-      <Feather name="plus" size={32} color="black" />
-    </Pressable>
-  );
-};
-
 export default function TabLayout() {
   return (
     <Tabs
@@ -71,15 +51,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <Feather name="dollar-sign" size={size} color={color} />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="appointment"
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="plus" size={size} color={color} />
-          ),
-          tabBarButton: (props) => <AddAppointmentButton {...props} />,
         }}
       />
     </Tabs>
