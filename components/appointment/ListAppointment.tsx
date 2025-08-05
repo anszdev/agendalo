@@ -1,4 +1,5 @@
 import { viewCalendarAtom } from "@/atoms/calendar";
+import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
 import { useCalendar } from "@/hooks/calendar/useCalendar";
 import { useAtom } from "jotai";
@@ -45,7 +46,7 @@ export const ListAppointment = () => {
       </View>
       <View>
         <FlatList
-          data={[1, 2, 3, 4, 5]}
+          data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
           keyExtractor={(item) => item.toString()}
           renderItem={({ item }) => (
             <AppointmentHours hour="11:00" amPm="AM">
@@ -54,6 +55,7 @@ export const ListAppointment = () => {
           )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 16 }}
+          style={{ height: 800 }}
         />
       </View>
     </Animated.View>
@@ -68,7 +70,7 @@ const st = StyleSheet.create({
     paddingVertical: 24,
     zIndex: 2,
     position: "relative",
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.a_background,
     marginTop: -24,
   },
   list_appointment_header: {
@@ -85,5 +87,6 @@ const st = StyleSheet.create({
   list_appointment_count: {
     fontSize: 18,
     fontFamily: FONT_WEIGHT.semibold,
+    color: COLORS.a_textPrimary,
   },
 });
