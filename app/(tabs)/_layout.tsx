@@ -1,10 +1,15 @@
+import { COLORS } from "@/constants/colors";
 import { Feather } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import { Pressable } from "react-native";
 
 const TabBarButton = (props: any) => {
   return (
-    <Pressable {...props} android_ripple={null}>
+    <Pressable
+      {...props}
+      android_ripple={null}
+      style={{ gap: 4, justifyContent: "center", alignItems: "center" }}
+    >
       {props.children}
     </Pressable>
   );
@@ -14,14 +19,23 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#FF8C8C",
+        tabBarActiveTintColor: COLORS.a_primary,
         headerShown: false,
-        animation: "fade",
+        animation: "shift",
         tabBarStyle: {
-          height: 80,
-          borderTopLeftRadius: 26,
-          borderTopRightRadius: 26,
-          backgroundColor: "#fff",
+          position: "absolute",
+          bottom: 20,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginHorizontal: 80,
+          borderRadius: 999,
+          elevation: 0.3,
+          height: "auto",
+          paddingBottom: 10,
+          paddingTop: 10,
+          paddingHorizontal: 6,
+          backgroundColor: "white",
         },
         tabBarButton: (props) => <TabBarButton {...props} />,
       }}
