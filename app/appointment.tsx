@@ -1,21 +1,13 @@
-import { daySelectedAtom } from "@/atoms/calendar";
 import { InputAppointment } from "@/components/appointment/InputAppointment";
-import { Calendar } from "@/components/calendar/Calendar";
+import { InputAppointmentDate } from "@/components/appointment/InputAppointmentDate";
 import { Input } from "@/components/ui/Input";
 import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
 import { Feather } from "@expo/vector-icons";
-import { DateInput, format } from "@formkit/tempo";
 import { router } from "expo-router";
-import { useAtom } from "jotai";
-import { useState } from "react";
-import { Modal, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 
 export default function Appointment() {
-  const [dateSelected] = useAtom(daySelectedAtom);
-  const [showCalendar, setShowCalendar] = useState(false);
-  const [date, setDate] = useState<DateInput>();
-
   return (
     <View
       style={{
@@ -48,126 +40,41 @@ export default function Appointment() {
         </View>
 
         <View style={{ gap: 24 }}>
-          <Input
-            label="Nombre"
-            placeholder="Nombre del paciente"
-            onChangeText={(text) => console.log(text)}
-            fontSize={22}
-          />
+          <View>
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily: FONT_WEIGHT.semibold,
+                color: COLORS.a_textPrimary,
+              }}
+            >
+              Cliente
+            </Text>
+            <TextInput
+              style={{
+                fontSize: 32,
+                fontFamily: FONT_WEIGHT.bold,
+                textTransform: "capitalize",
+                padding: 0,
+              }}
+              placeholder="Nombre del cliente"
+              placeholderTextColor="#ddd"
+              cursorColor={COLORS.a_textPrimary}
+              underlineColorAndroid={"transparent"}
+            />
+          </View>
 
           <InputAppointment icon="phone">
             <Input
               label="Teléfono"
+              inputMode="tel"
               onChangeText={(text) => console.log(text)}
-              fontSize={22}
             />
           </InputAppointment>
 
-          <View style={{ flexDirection: "row", gap: 12 }}>
-            <View
-              style={{
-                width: 60,
-                height: 60,
-                backgroundColor: "#E9D7F5",
-                borderRadius: 999,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Feather name="calendar" size={24} />
-            </View>
-
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: FONT_WEIGHT.semibold,
-                  color: COLORS.a_textPrimary,
-                }}
-              >
-                Fecha
-              </Text>
-              <Text
-                onPress={() => setShowCalendar(true)}
-                style={{
-                  fontSize: 22,
-                  fontFamily: FONT_WEIGHT.bold,
-                  padding: 0,
-                  paddingBottom: 4,
-                  width: "auto",
-                  borderBottomWidth: 2,
-                  borderBottomColor: COLORS.a_textPrimary,
-                }}
-              >
-                {format(
-                  date ??
-                    new Date(
-                      dateSelected.year,
-                      dateSelected.month,
-                      dateSelected.day ?? 1
-                    ),
-                  "long",
-                  "es"
-                )}
-              </Text>
-              {/* {showCalendar && (
-                <DatePicker
-                  value={
-                    new Date(
-                      dateSelected.year,
-                      dateSelected.month,
-                      dateSelected.day ?? 1
-                    )
-                  }
-                  onChange={(e, selectedDate) => {
-                    setShowCalendar(false);
-                    if (selectedDate) {
-                      console.log(selectedDate);
-                      setDate(selectedDate);
-                    }
-                  }}
-                  mode="date"
-                  display="compact"
-                  minimumDate={new Date()}
-                  accentColor="#ccc"
-                />
-              )} */}
-              <Modal
-                visible={showCalendar}
-                transparent
-                animationType="slide"
-                onRequestClose={() => setShowCalendar(false)}
-              >
-                <View
-                  style={{
-                    backgroundColor: "red",
-                    height: "50%",
-                    position: "absolute",
-                    bottom: 0,
-                    width: "100%",
-                  }}
-                >
-                  <View style={{ width: "100%", marginBottom: 16 }}>
-                    <Pressable
-                      onPress={() => setShowCalendar(false)}
-                      style={{
-                        backgroundColor: "rgba(218, 218, 218, 0.6)",
-                        borderRadius: 9999,
-                        padding: 4,
-                        height: 40,
-                        width: 40,
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Feather name="x" size={20} color="black" />
-                    </Pressable>
-                  </View>
-                  <Calendar />
-                </View>
-              </Modal>
-            </View>
-          </View>
+          <InputAppointment icon="calendar">
+            <InputAppointmentDate />
+          </InputAppointment>
 
           <View style={{ flexDirection: "row", gap: 12 }}>
             <View
