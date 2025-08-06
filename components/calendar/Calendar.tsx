@@ -15,7 +15,6 @@ export const Calendar = () => {
   const { date, daySelected, selectedDay, setDate, calendarWeekDays, weeks } =
     useCalendar();
 
-  const MAX_HEIGHT = calendarWeekDays.length > 35 ? 330 : 300;
   const MIN_HEIGHT = calendarWeekDays.length > 35 ? 330 : 300;
 
   const calendarHeight = useSharedValue(MIN_HEIGHT);
@@ -24,14 +23,6 @@ export const Calendar = () => {
       height: calendarHeight.value,
     };
   });
-
-  /* useEffect(() => {
-    if (viewCalendar === "week") {
-      calendarHeight.value = withSpring(MIN_HEIGHT);
-    } else {
-      calendarHeight.value = withSpring(MAX_HEIGHT);
-    }
-  }, [viewCalendar, MAX_HEIGHT]); */
 
   return (
     <View style={{ marginTop: 16, paddingHorizontal: 16, paddingBottom: 12 }}>
