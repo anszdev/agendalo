@@ -29,14 +29,11 @@ export const InputAppointmentDate = () => {
       <Modal
         visible={showCalendar}
         transparent
-        animationType="slide"
+        animationType="fade"
         onRequestClose={() => setShowCalendar(false)}
         style={styles.modal}
       >
-        <View
-          onTouchStart={() => setShowCalendar(false)}
-          style={styles.modalOverlay}
-        />
+        <View style={styles.modalOverlay} />
         <View style={styles.modalContent}>
           <View style={styles.closeButtonContainer}>
             <Pressable
@@ -78,6 +75,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
+    backgroundColor: "#00000066",
   },
   modalContent: {
     position: "absolute",
