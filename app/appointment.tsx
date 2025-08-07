@@ -1,5 +1,6 @@
 import { InputAppointment } from "@/components/appointment/InputAppointment";
 import { InputAppointmentDate } from "@/components/appointment/InputAppointmentDate";
+import { InputAppointmentHour } from "@/components/appointment/InputAppointmentHour";
 import { Input } from "@/components/ui/Input";
 import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
@@ -56,6 +57,7 @@ export default function Appointment() {
                 fontFamily: FONT_WEIGHT.bold,
                 textTransform: "capitalize",
                 padding: 0,
+                color: "#000",
               }}
               placeholder="Nombre del cliente"
               placeholderTextColor="#ddd"
@@ -76,42 +78,9 @@ export default function Appointment() {
             <InputAppointmentDate />
           </InputAppointment>
 
-          <View style={{ flexDirection: "row", gap: 12 }}>
-            <View
-              style={{
-                width: 60,
-                height: 60,
-                backgroundColor: "#E9D7F5",
-                borderRadius: 999,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Feather name="clock" size={24} />
-            </View>
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: FONT_WEIGHT.semibold,
-                  color: COLORS.a_textPrimary,
-                }}
-              >
-                Hora
-              </Text>
-              <TextInput
-                style={{
-                  fontSize: 22,
-                  fontFamily: FONT_WEIGHT.bold,
-                  padding: 0,
-                  paddingBottom: 4,
-                  width: "auto",
-                  borderBottomWidth: 2,
-                  borderBottomColor: COLORS.a_textPrimary,
-                }}
-              />
-            </View>
-          </View>
+          <InputAppointment icon="clock">
+            <InputAppointmentHour />
+          </InputAppointment>
 
           <View style={{ flexDirection: "row", gap: 12 }}>
             <View
