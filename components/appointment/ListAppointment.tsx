@@ -39,10 +39,10 @@ export const ListAppointment = () => {
   }, [viewCalendar, calendarWeekDays]);
 
   return (
-    <Animated.View style={[st.list_appointment, animatedStyle]}>
-      <View style={st.list_appointment_header}>
-        <Text style={st.list_appointment_day}>{formattedDayText}</Text>
-        <Text style={st.list_appointment_count}>3 citas</Text>
+    <Animated.View style={[style.list_appointment, animatedStyle]}>
+      <View style={style.list_appointment_header}>
+        <Text style={style.list_appointment_day}>{formattedDayText}</Text>
+        <Text style={style.list_appointment_count}>3 citas</Text>
       </View>
       <View>
         <FlatList
@@ -55,19 +55,20 @@ export const ListAppointment = () => {
           )}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{ paddingBottom: 16 }}
-          style={{ height: 800 }}
+          style={{ height: 600, paddingBottom: 32 }}
         />
       </View>
     </Animated.View>
   );
 };
 
-const st = StyleSheet.create({
+const style = StyleSheet.create({
   list_appointment: {
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingHorizontal: 16,
     paddingVertical: 24,
+    paddingBottom: 200,
     zIndex: 2,
     position: "relative",
     backgroundColor: COLORS.a_background,
