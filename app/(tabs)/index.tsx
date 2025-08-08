@@ -38,7 +38,7 @@ export default function Index() {
 
         <ListAppointment />
       </View>
-      <LinearGradient
+      {/* <LinearGradient
         colors={["#ffffffcd", "#ffffffff"]}
         locations={[0, 0.5, 1]}
         start={{ x: 1, y: 0 }}
@@ -52,7 +52,7 @@ export default function Index() {
           zIndex: 10,
           filter: "blur(10px)",
         }}
-      />
+      /> */}
     </SafeAreaView>
   );
 }

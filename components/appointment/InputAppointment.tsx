@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 interface InputAppointmentProps {
   children: React.ReactNode;
-  icon?: "phone" | "calendar" | "clock";
+  icon?: "phone" | "calendar" | "clock" | "dollar-sign" | "image";
   color?: string;
 }
 

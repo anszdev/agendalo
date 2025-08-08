@@ -1,5 +1,6 @@
 import { useCalendar } from "@/hooks/calendar/useCalendar";
 import { Day } from "@/types/calendar";
+import { useEffect } from "react";
 import { Dimensions, FlatList, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
@@ -11,11 +12,18 @@ import { WeekDays } from "./WeekDays";
 
 const SCREEN_WIDTH = Dimensions.get("window").width;
 
-export const Calendar = () => {
-  const { date, daySelected, selectedDay, setDate, calendarWeekDays, weeks } =
-    useCalendar();
+interface CalendarProps {
+  daySelected?: Day;
+  handleSelectedDay?: (day: Day | null) => void;
+}
 
-  const MIN_HEIGHT = calendarWeekDays.length > 35 ? 330 : 300;
+export const Calendar = ({ daySelected, handleSelectedDay }: CalendarProps) => {
+  const calendar = useCalendar();
+  const { date, setDate, calendarWeekDays, weeks } = calendar;
+  const currenSelectedDay = daySelected ?? calendar.daySelected;
+  const updateSelectedDay = handleSelectedDay ?? calendar.handleSelectedDay;
+
+  const MIN_HEIGHT = calendarWeekDays.length > 35 ? 340 : 300;
 
   const calendarHeight = useSharedValue(MIN_HEIGHT);
   const translateYAnimated = useAnimatedStyle(() => {
@@ -23,6 +31,14 @@ export const Calendar = () => {
       height: calendarHeight.value,
     };
   });
+
+  useEffect(() => {
+    if (calendarWeekDays.length > 35) {
+      calendarHeight.value = 340;
+    } else {
+      calendarHeight.value = 300;
+    }
+  }, [calendarWeekDays, calendarHeight]);
 
   return (
     <View style={{ marginTop: 16, paddingHorizontal: 16, paddingBottom: 12 }}>
@@ -54,8 +70,8 @@ export const Calendar = () => {
                 <ButtonDay
                   key={`${day}-${day.month}-${dayIndex}`}
                   day={day}
-                  selected={daySelected}
-                  updateSelectedDay={selectedDay}
+                  selected={currenSelectedDay}
+                  updateSelectedDay={updateSelectedDay}
                   activeIndicator={dayIndex % 2 === 0}
                 />
               ))}

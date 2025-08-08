@@ -27,6 +27,12 @@ export const ButtonDay = ({
     day?.month === selected?.month &&
     day?.year === selected?.year;
 
+  const today = new Date();
+  const isToday =
+    day?.day === today.getDate() &&
+    day?.month === today.getMonth() &&
+    day?.year === today.getFullYear();
+
   const animatedOpacity = useSharedValue(isSelected ? 1 : 0);
 
   useEffect(() => {
@@ -44,6 +50,7 @@ export const ButtonDay = ({
       onLongPress={() => console.log("Long Pressed", day)}
     >
       <Animated.View style={[isSelected && style.daySelected, animatedStyle]} />
+      {isToday && <View style={style.today} />}
 
       <Text
         style={[
@@ -77,11 +84,19 @@ const style = StyleSheet.create({
     fontSize: 18,
     textAlign: "center",
   },
+  today: {
+    position: "absolute",
+    borderColor: COLORS.a_primary,
+    borderWidth: 1.5,
+    width: 40,
+    height: 40,
+    borderRadius: 9999,
+  },
   daySelected: {
     position: "absolute",
     backgroundColor: "#fff",
-    width: 44,
-    height: 44,
+    width: 40,
+    height: 40,
     borderRadius: 9999,
     shadowColor: "#000",
     shadowOffset: {

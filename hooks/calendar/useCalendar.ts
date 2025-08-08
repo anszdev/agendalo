@@ -2,6 +2,7 @@ import {
   dateAtom,
   daySelectedAtom,
   formattedDayTextAtom,
+  viewCalendarHeightAtom,
 } from "@/atoms/calendar";
 import { Day, Weeks } from "@/types/calendar";
 import { format, monthDays } from "@formkit/tempo";
@@ -11,6 +12,7 @@ export const useCalendar = () => {
   const [date, setDate] = useAtom(dateAtom);
   const [daySelected, setDaySelected] = useAtom(daySelectedAtom);
   const [formattedDayText] = useAtom(formattedDayTextAtom);
+  const [, setViewCalendarHeight] = useAtom(viewCalendarHeightAtom);
 
   // Generate the calendar days for the current month
   const firstDayOfMonth = new Date(
@@ -54,12 +56,14 @@ export const useCalendar = () => {
     ...nextMonthPlaceholderDays,
   ];
 
+  setViewCalendarHeight(calendarWeekDays.length > 35 ? -340 : -300);
+
   const weeks: Weeks = [];
   for (let i = 0; i < calendarWeekDays.length; i += 7) {
     weeks.push(calendarWeekDays.slice(i, i + 7));
   }
 
-  const selectedDay = (day: Day | null) => {
+  const handleSelectedDay = (day: Day | null) => {
     if (!day?.day) return;
     setDaySelected(day);
   };
@@ -70,7 +74,7 @@ export const useCalendar = () => {
     daySelected,
     setDaySelected,
     calendarWeekDays,
-    selectedDay,
+    handleSelectedDay,
     calculatedFirstWeekDay,
     totalDaysInMonth,
     formattedDayText,

@@ -15,3 +15,4 @@ export const formattedDayTextAtom = atom((get) => {
 });
 
 export const viewCalendarAtom = atom<viewCalendarType>("hidden");
+export const viewCalendarHeightAtom = atom(0);

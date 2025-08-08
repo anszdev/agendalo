@@ -1,4 +1,4 @@
-import { viewCalendarAtom } from "@/atoms/calendar";
+import { viewCalendarAtom, viewCalendarHeightAtom } from "@/atoms/calendar";
 import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
 import { useCalendar } from "@/hooks/calendar/useCalendar";
@@ -16,6 +16,7 @@ import { AppointmentHours } from "./AppointmentHours";
 export const ListAppointment = () => {
   const { formattedDayText, calendarWeekDays } = useCalendar();
   const [viewCalendar] = useAtom(viewCalendarAtom);
+  const [viewCalendarHeight] = useAtom(viewCalendarHeightAtom);
 
   const translateY = useSharedValue(0);
   const animatedStyle = useAnimatedStyle(() => {
@@ -26,7 +27,7 @@ export const ListAppointment = () => {
 
   useEffect(() => {
     if (viewCalendar === "hidden") {
-      translateY.value = withSpring(-300, {
+      translateY.value = withSpring(viewCalendarHeight, {
         damping: 16,
         stiffness: 120,
       }); // Adjust this value as needed
@@ -36,7 +37,7 @@ export const ListAppointment = () => {
         stiffness: 120,
       });
     }
-  }, [viewCalendar, calendarWeekDays]);
+  }, [viewCalendar, calendarWeekDays, translateY, viewCalendarHeight]);
 
   return (
     <Animated.View style={[style.list_appointment, animatedStyle]}>

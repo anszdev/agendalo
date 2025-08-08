@@ -1,3 +1,4 @@
+import { daySelectedAtom } from "@/atoms/calendar";
 import { InputAppointment } from "@/components/appointment/InputAppointment";
 import { InputAppointmentDate } from "@/components/appointment/InputAppointmentDate";
 import { InputAppointmentHour } from "@/components/appointment/InputAppointmentHour";
@@ -6,40 +7,40 @@ import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { useAtom } from "jotai";
+import { useState } from "react";
+import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 
 export default function Appointment() {
+  const [dateSelected] = useAtom(daySelectedAtom);
+  const [temAppointementDate, setTempAppointmentDate] = useState(dateSelected);
+  const [appointment, setAppointment] = useState({
+    client: "",
+    phone: "",
+    date: {
+      day: dateSelected.day,
+      month: dateSelected.month,
+      year: dateSelected.year,
+    },
+    time: "10:00 AM",
+    service: "",
+    evidence: "",
+  });
+
+  console.log(appointment);
+
   return (
-    <View
-      style={{
-        height: "94%",
-        backgroundColor: "#fff",
-        marginTop: 60,
-        borderTopLeftRadius: 32,
-        borderTopRightRadius: 32,
-        paddingHorizontal: 16,
-        paddingVertical: 24,
-      }}
-    >
+    <View style={styles.modal}>
       <View style={{ flex: 1 }}>
-        {/* Header modal */}
-        <View style={{ width: "100%", marginBottom: 16 }}>
+        <View style={styles.headerModal}>
           <Pressable
             onPress={() => router.dismiss()}
-            style={{
-              backgroundColor: "rgba(218, 218, 218, 0.6)",
-              borderRadius: 9999,
-              padding: 4,
-              height: 40,
-              width: 40,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            style={styles.headerCloseModalButton}
           >
             <Feather name="x" size={20} color="black" />
           </Pressable>
         </View>
-
+        {/* Form content */}
         <View style={{ gap: 24 }}>
           <View>
             <Text
@@ -63,6 +64,9 @@ export default function Appointment() {
               placeholderTextColor="#ddd"
               cursorColor={COLORS.a_textPrimary}
               underlineColorAndroid={"transparent"}
+              onChangeText={(text) => {
+                setAppointment((prev) => ({ ...prev, client: text }));
+              }}
             />
           </View>
 
@@ -70,31 +74,37 @@ export default function Appointment() {
             <Input
               label="Teléfono"
               inputMode="tel"
-              onChangeText={(text) => console.log(text)}
+              onChangeText={(text) => {
+                setAppointment((prev) => ({ ...prev, phone: text }));
+              }}
             />
           </InputAppointment>
 
           <InputAppointment icon="calendar">
-            <InputAppointmentDate />
+            <InputAppointmentDate
+              selectedDay={temAppointementDate}
+              appointmentDate={appointment.date}
+              onSelectedDayChange={(day) => {
+                setTempAppointmentDate(day!);
+              }}
+              onSave={() => {
+                setAppointment((prev) => ({
+                  ...prev,
+                  date: {
+                    day: temAppointementDate.day!,
+                    month: temAppointementDate.month,
+                    year: temAppointementDate.year,
+                  },
+                }));
+              }}
+            />
           </InputAppointment>
 
           <InputAppointment icon="clock">
             <InputAppointmentHour />
           </InputAppointment>
 
-          <View style={{ flexDirection: "row", gap: 12 }}>
-            <View
-              style={{
-                width: 60,
-                height: 60,
-                backgroundColor: "#E9D7F5",
-                borderRadius: 999,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Feather name="info" size={24} />
-            </View>
+          <InputAppointment icon="dollar-sign">
             <View style={{ flex: 1, justifyContent: "center" }}>
               <Text
                 style={{
@@ -117,21 +127,9 @@ export default function Appointment() {
                 }}
               />
             </View>
-          </View>
+          </InputAppointment>
 
-          <View style={{ flexDirection: "row", gap: 12 }}>
-            <View
-              style={{
-                width: 60,
-                height: 60,
-                backgroundColor: "#E9D7F5",
-                borderRadius: 999,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Feather name="image" size={24} />
-            </View>
+          <InputAppointment icon="image">
             <View style={{ flex: 1, justifyContent: "center" }}>
               <Text
                 style={{
@@ -154,9 +152,31 @@ export default function Appointment() {
                 }}
               />
             </View>
-          </View>
+          </InputAppointment>
         </View>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  modal: {
+    height: "94%",
+    backgroundColor: "#fff",
+    marginTop: 60,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    paddingHorizontal: 16,
+    paddingVertical: 24,
+  },
+  headerModal: { width: "100%", marginBottom: 16 },
+  headerCloseModalButton: {
+    backgroundColor: "rgba(218, 218, 218, 0.6)",
+    borderRadius: 9999,
+    padding: 4,
+    height: 40,
+    width: 40,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
