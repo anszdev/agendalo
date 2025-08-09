@@ -1,31 +1,62 @@
 import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
+import { Time } from "@/types/calendar";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { ModalAppointment } from "./ModalAppointment";
 import { ScrollSelector } from "./ScrollSelector";
 
-const ITEM_HEIGHT = 82; // Altura de cada número
+interface InputAppointmentDateProps {
+  selectedTime: Time;
+  tempTime: Time;
+  setTempTime: (prev: Time | ((prev: Time) => Time)) => void;
+  onSave: () => void;
+}
 
-export const InputAppointmentHour = () => {
-  const [hour, setHour] = useState({
-    hour: "10",
-    minute: "00",
-    amPm: "AM",
-  });
+const ITEM_HEIGHT = 82;
+
+const HOURS = Array.from({ length: 12 }, (_, i) =>
+  (i + 1).toString().padStart(2, "0")
+);
+const MINUTES = ["00", "15", "30", "45"];
+const AM_PM = ["AM", "PM"];
+
+const getIndexFromValue = (array: string[], value: string) =>
+  Math.max(0, array.indexOf(value));
+
+const calculateScrollIndex = (e: NativeSyntheticEvent<NativeScrollEvent>) =>
+  Math.round(e.nativeEvent.contentOffset.y / ITEM_HEIGHT);
+
+export const InputAppointmentHour = ({
+  onSave,
+  selectedTime,
+  setTempTime,
+  tempTime,
+}: InputAppointmentDateProps) => {
   const [showCalendar, setShowCalendar] = useState(false);
-
-  const hours = Array.from({ length: 12 }, (_, i) => i + 1); // 0 al 23
 
   return (
     <View style={styles.container}>
       <Text style={styles.label}>Hora</Text>
-      <Text onPress={() => setShowCalendar(true)} style={styles.dateText}>
-        {`${hour.hour}:${hour.minute} ${hour.amPm}`}
+      <Text
+        onPress={() => {
+          setTempTime(selectedTime);
+          setShowCalendar(true);
+        }}
+        style={styles.dateText}
+      >
+        {`${selectedTime.hour}:${selectedTime.minute} ${selectedTime.amPm}`}
       </Text>
       <ModalAppointment
         showModal={showCalendar}
         onToggleModal={setShowCalendar}
+        onSave={onSave}
       >
         <View
           style={{
@@ -38,15 +69,13 @@ export const InputAppointmentHour = () => {
           }}
         >
           <ScrollSelector
-            data={hours.map((h) => h.toString().padStart(2, "0"))}
-            initialScrollIndex={9}
+            data={HOURS.map((h) => h.toString().padStart(2, "0"))}
+            initialScrollIndex={getIndexFromValue(HOURS, tempTime.hour)}
             itemHeight={ITEM_HEIGHT}
             onScrollEnd={(e) => {
-              const index = Math.round(
-                e.nativeEvent.contentOffset.y / ITEM_HEIGHT
-              );
-              const hour = hours[index % hours.length];
-              setHour((prev) => ({
+              const index = calculateScrollIndex(e);
+              const hour = HOURS[index % HOURS.length];
+              setTempTime((prev) => ({
                 ...prev,
                 hour: hour.toString().padStart(2, "0"),
               }));
@@ -56,28 +85,24 @@ export const InputAppointmentHour = () => {
           <Text style={styles.clockSeparator}>:</Text>
 
           <ScrollSelector
-            data={["00", "15", "30", "45"]}
-            initialScrollIndex={0}
+            data={MINUTES}
+            initialScrollIndex={getIndexFromValue(MINUTES, tempTime.minute)}
             itemHeight={ITEM_HEIGHT}
             onScrollEnd={(e) => {
-              const index = Math.round(
-                e.nativeEvent.contentOffset.y / ITEM_HEIGHT
-              );
-              const minute = ["00", "15", "30", "45"][index % 4];
-              setHour((prev) => ({ ...prev, minute }));
+              const index = calculateScrollIndex(e);
+              const minute = MINUTES[index % MINUTES.length];
+              setTempTime((prev) => ({ ...prev, minute }));
             }}
           />
 
           <ScrollSelector
-            data={["AM", "PM"]}
-            initialScrollIndex={0}
+            data={AM_PM}
+            initialScrollIndex={getIndexFromValue(AM_PM, tempTime.amPm)}
             itemHeight={ITEM_HEIGHT}
             onScrollEnd={(e) => {
-              const index = Math.round(
-                e.nativeEvent.contentOffset.y / ITEM_HEIGHT
-              );
-              const amPm = ["AM", "PM"][index % 2];
-              setHour((prev) => ({ ...prev, amPm }));
+              const index = calculateScrollIndex(e);
+              const amPm = AM_PM[index % AM_PM.length] as "AM" | "PM";
+              setTempTime((prev) => ({ ...prev, amPm }));
             }}
           />
         </View>
