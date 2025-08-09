@@ -5,4 +5,10 @@ export type Day = {
   year: number;
 };
 
+export type Time = {
+  hour: string;
+  minute: string;
+  amPm: "AM" | "PM";
+};
+
 export type Weeks = Day[][];
