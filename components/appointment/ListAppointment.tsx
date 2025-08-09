@@ -30,7 +30,7 @@ export const ListAppointment = () => {
       translateY.value = withSpring(viewCalendarHeight, {
         damping: 16,
         stiffness: 120,
-      }); // Adjust this value as needed
+      });
     } else {
       translateY.value = withSpring(0, {
         damping: 16,
