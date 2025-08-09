@@ -57,13 +57,20 @@ export const ButtonDay = ({
           style.text_day,
           {
             fontFamily: isSelected ? FONT_WEIGHT.bold : FONT_WEIGHT.medium,
-            color: isSelected ? "#000" : "#333",
+            color: isSelected && !isToday ? "#000" : isToday ? "#fff" : "#333",
           },
         ]}
       >
         {day?.day ?? ""}
       </Text>
-      {activeIndicator && day.day !== null && <View style={style.indicator} />}
+      {activeIndicator && day.day !== null && (
+        <View
+          style={[
+            style.indicator,
+            { backgroundColor: !isToday ? COLORS.a_primary : "#fff" },
+          ]}
+        />
+      )}
     </Pressable>
   );
 };
@@ -86,8 +93,7 @@ const style = StyleSheet.create({
   },
   today: {
     position: "absolute",
-    borderColor: COLORS.a_primary,
-    borderWidth: 1.5,
+    backgroundColor: COLORS.a_primary,
     width: 40,
     height: 40,
     borderRadius: 9999,
@@ -113,7 +119,6 @@ const style = StyleSheet.create({
     left: "50%",
     width: 5,
     height: 5,
-    backgroundColor: COLORS.a_primary,
     borderRadius: 999,
     transform: [{ translateX: -2.5 }],
   },
