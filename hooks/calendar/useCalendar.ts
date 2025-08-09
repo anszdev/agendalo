@@ -7,6 +7,7 @@ import {
 import { Day, Weeks } from "@/types/calendar";
 import { format, monthDays } from "@formkit/tempo";
 import { useAtom } from "jotai";
+import { useEffect } from "react";
 
 export const useCalendar = () => {
   const [date, setDate] = useAtom(dateAtom);
@@ -56,8 +57,6 @@ export const useCalendar = () => {
     ...nextMonthPlaceholderDays,
   ];
 
-  setViewCalendarHeight(calendarWeekDays.length > 35 ? -340 : -300);
-
   const weeks: Weeks = [];
   for (let i = 0; i < calendarWeekDays.length; i += 7) {
     weeks.push(calendarWeekDays.slice(i, i + 7));
@@ -67,6 +66,10 @@ export const useCalendar = () => {
     if (!day?.day) return;
     setDaySelected(day);
   };
+
+  useEffect(() => {
+    setViewCalendarHeight(calendarWeekDays.length > 35 ? -340 : -300);
+  }, [calendarWeekDays.length, setViewCalendarHeight]);
 
   return {
     date,
