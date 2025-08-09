@@ -5,6 +5,7 @@ import { InputAppointmentHour } from "@/components/appointment/InputAppointmentH
 import { Input } from "@/components/ui/Input";
 import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
+import { type Time } from "@/types/calendar";
 import { Feather } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useAtom } from "jotai";
@@ -14,6 +15,12 @@ import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
 export default function Appointment() {
   const [dateSelected] = useAtom(daySelectedAtom);
   const [temAppointementDate, setTempAppointmentDate] = useState(dateSelected);
+  const [tempTime, setTempTime] = useState<Time>({
+    hour: "10",
+    minute: "00",
+    amPm: "AM",
+  });
+
   const [appointment, setAppointment] = useState({
     client: "",
     phone: "",
@@ -22,12 +29,12 @@ export default function Appointment() {
       month: dateSelected.month,
       year: dateSelected.year,
     },
-    time: "10:00 AM",
+    time: {
+      ...tempTime,
+    },
     service: "",
     evidence: "",
   });
-
-  console.log(appointment);
 
   return (
     <View style={styles.modal}>
@@ -90,18 +97,24 @@ export default function Appointment() {
               onSave={() => {
                 setAppointment((prev) => ({
                   ...prev,
-                  date: {
-                    day: temAppointementDate.day!,
-                    month: temAppointementDate.month,
-                    year: temAppointementDate.year,
-                  },
+                  date: { ...temAppointementDate },
                 }));
               }}
             />
           </InputAppointment>
 
           <InputAppointment icon="clock">
-            <InputAppointmentHour />
+            <InputAppointmentHour
+              selectedTime={appointment.time}
+              tempTime={tempTime}
+              setTempTime={setTempTime}
+              onSave={() => {
+                setAppointment((prev) => ({
+                  ...prev,
+                  time: { ...tempTime },
+                }));
+              }}
+            />
           </InputAppointment>
 
           <InputAppointment icon="dollar-sign">
