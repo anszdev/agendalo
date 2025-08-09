@@ -25,7 +25,10 @@ export const InputAppointmentDate = ({
     <View style={styles.container}>
       <Text style={styles.label}>Fecha</Text>
       <Text
-        onPress={() => setShowCalendar(true)}
+        onPress={() => {
+          onSelectedDayChange(appointmentDate);
+          setShowCalendar(true);
+        }}
         style={styles.dateText}
         numberOfLines={1}
         ellipsizeMode="tail"
