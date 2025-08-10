@@ -2,6 +2,7 @@ import { daySelectedAtom } from "@/atoms/calendar";
 import { InputAppointment } from "@/components/appointment/InputAppointment";
 import { InputAppointmentDate } from "@/components/appointment/InputAppointmentDate";
 import { InputAppointmentHour } from "@/components/appointment/InputAppointmentHour";
+import { TagsAppointment } from "@/components/appointment/TagsAppointment";
 import { Input } from "@/components/ui/Input";
 import { COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
@@ -118,28 +119,7 @@ export default function Appointment() {
           </InputAppointment>
 
           <InputAppointment icon="dollar-sign">
-            <View style={{ flex: 1, justifyContent: "center" }}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  fontFamily: FONT_WEIGHT.semibold,
-                  color: COLORS.a_textPrimary,
-                }}
-              >
-                Servicio
-              </Text>
-              <TextInput
-                style={{
-                  fontSize: 22,
-                  fontFamily: FONT_WEIGHT.bold,
-                  padding: 0,
-                  paddingBottom: 4,
-                  width: "auto",
-                  borderBottomWidth: 2,
-                  borderBottomColor: COLORS.a_textPrimary,
-                }}
-              />
-            </View>
+            <TagsAppointment />
           </InputAppointment>
 
           <InputAppointment icon="image">
