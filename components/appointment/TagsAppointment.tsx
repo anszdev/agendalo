@@ -1,5 +1,6 @@
-import { COLORS } from "@/constants/colors";
+import { APPOINTMENT_COLORS, COLORS } from "@/constants/colors";
 import { FONT_WEIGHT } from "@/constants/fonts";
+import { getRandomColor } from "@/helpers/appointment";
 import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -7,31 +8,22 @@ import { Input } from "../ui/Input";
 import { ModalAppointment } from "./ModalAppointment";
 
 type Tag = {
-  tagName: string;
-  colors: string;
+  tag: string;
+  color: string;
 };
 
 export const TagsAppointment = () => {
   const [showModal, setShowModal] = useState(false);
   const [createTag, setCreateTag] = useState(false);
   const [tagsSelected, setTagsSelected] = useState<Tag[]>([]);
-  const [newTag, setNewTag] = useState({
-    tagName: "",
-    colors: "",
+  const [newTag, setNewTag] = useState<Tag>({
+    color: "",
+    tag: "",
   });
-  const [tags, setTags] = useState([
-    {
-      tagName: "Lente",
-      colors: "cyan",
-    },
-    {
-      tagName: "Bifocal",
-      colors: "pink",
-    },
-    {
-      tagName: "Pupilente",
-      colors: "yellow",
-    },
+  const [tags, setTags] = useState<Tag[]>([
+    { tag: "Lente", color: APPOINTMENT_COLORS.blue.background },
+    { tag: "Bifocal", color: APPOINTMENT_COLORS.coral.background },
+    { tag: "Pupilente", color: APPOINTMENT_COLORS.lavender.background },
   ]);
 
   return (
@@ -48,17 +40,18 @@ export const TagsAppointment = () => {
         }}
       >
         <ScrollView
+          keyboardShouldPersistTaps="handled"
           style={{ paddingHorizontal: 16, paddingVertical: 8, maxHeight: 250 }}
         >
           {createTag && (
             <View style={styles.newTag}>
               <Input
                 label="Nuevo servicio"
-                value={newTag.tagName}
+                value={newTag.tag}
                 onChangeText={(text) => {
                   setNewTag({
                     ...newTag,
-                    tagName: text,
+                    tag: text,
                   });
                 }}
               />
@@ -67,10 +60,30 @@ export const TagsAppointment = () => {
               <Pressable
                 style={styles.addTagButton}
                 onPress={() => {
-                  setTags([newTag, ...tags]);
+                  if (!newTag.tag.trim()) {
+                    // Opcional: mostrar alerta o feedback al usuario
+                    return;
+                  }
+                  if (
+                    tags.some(
+                      ({ tag }) =>
+                        tag.toLowerCase() === newTag.tag.trim().toLowerCase()
+                    )
+                  ) {
+                    // Opcional: mostrar alerta o feedback al usuario
+                    return;
+                  }
+
+                  setTags([
+                    {
+                      color: getRandomColor().background,
+                      tag: newTag.tag.toLocaleLowerCase(),
+                    },
+                    ...tags,
+                  ]);
                 }}
               >
-                <Feather name="check" size={24} color="#498f4cff" />
+                <Feather name="check" size={24} color="#fff" />
               </Pressable>
             </View>
           )}
@@ -84,39 +97,35 @@ export const TagsAppointment = () => {
                 Crear Servicio <Feather name="plus-circle" size={16} />
               </Text>
             </Pressable>
-            {tags.map((tag) => (
+            {tags.map(({ tag, color }) => (
               <Pressable
-                key={tag.tagName}
+                key={tag}
                 style={[
                   styles.tag,
                   {
-                    backgroundColor: tagsSelected.some(
-                      (t) => t.tagName === tag.tagName
-                    )
+                    backgroundColor: tagsSelected.some((t) => t.tag === tag)
                       ? "#D4F6CC"
-                      : tag.colors,
+                      : color,
                   },
                 ]}
                 onPress={() => {
-                  const isSelected = tagsSelected.some(
-                    (t) => t.tagName === tag.tagName
-                  );
+                  const isSelected = tagsSelected.some((t) => t.tag === tag);
 
                   if (!isSelected) {
-                    setTagsSelected([...tagsSelected, tag]);
+                    setTagsSelected([...tagsSelected, { tag, color: "" }]);
                     return;
                   }
 
                   /* If is select, delete of selected list */
                   const newTagList = tagsSelected.filter(
-                    (tagSelected) => tagSelected !== tag
+                    (tagSelected) => tagSelected.tag !== tag
                   );
 
                   setTagsSelected(newTagList);
                 }}
               >
-                <Text style={styles.tagName}>{tag.tagName}</Text>
-                {tagsSelected.some((t) => t.tagName === tag.tagName) && (
+                <Text style={styles.tagName}>{tag}</Text>
+                {tagsSelected.some((t) => t.tag === tag) && (
                   <Feather name="check" size={16} color="#498f4cff" />
                 )}
               </Pressable>
@@ -166,6 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     flexDirection: "row",
     alignItems: "center",
+    textTransform: "capitalize",
   },
   newTag: {
     marginBottom: 24,
@@ -176,6 +186,6 @@ const styles = StyleSheet.create({
   addTagButton: {
     padding: 8,
     borderRadius: 999,
-    backgroundColor: "#D4F6CC",
+    backgroundColor: COLORS.a_primary,
   },
 });
